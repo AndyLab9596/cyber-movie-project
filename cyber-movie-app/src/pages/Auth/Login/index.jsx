@@ -36,8 +36,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Login = ({ closeDialog }) => {
-    const history = useHistory()
+    const history = useHistory();
     const classes = useStyles();
+    const { enqueueSnackbar } = useSnackbar();
     const { values, handleChange, handleBlur } = useFormik({
         initialValues: {
             taiKhoan: "",
@@ -49,7 +50,14 @@ const Login = ({ closeDialog }) => {
     const dispatch = useDispatch();
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(LoginUser(values))
+        dispatch(LoginUser(values,
+            (msg) => {
+                enqueueSnackbar(msg, { variant: 'success' })
+            },
+            (msg) => {
+                enqueueSnackbar(msg, { variant: 'error' })
+            }
+        ))
     }
 
     const registerUser = useSelector(state => state.UserReducer.registerUser);

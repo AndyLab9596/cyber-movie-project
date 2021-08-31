@@ -54,16 +54,28 @@ const Register = ({ closeDialog }) => {
         // validationSchema:
     })
     const dispatch = useDispatch();
-    const registerUser = useSelector(state => state.UserReducer.registerUser);
+    // const registerUser = useSelector(state => state.UserReducer.registerUser);
+    // const history = useHistory();
+    const { enqueueSnackbar } = useSnackbar();
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(RegisterUser(values))
+        dispatch(RegisterUser(values,
+            (msg) => {
+                enqueueSnackbar(msg, { variant: 'success' })
+            },
+            (msg) => {
+                enqueueSnackbar(msg, { variant: 'error' })
+            },
+            () => closeDialog(),
+        ))
     }
-    useEffect(() => {
-        if (registerUser) {
-            closeDialog()
-        }
-    }, [registerUser, closeDialog])
+    // useEffect(() => {
+    //     if (registerUser) {
+    //         history.push('/home');
+    //         openDialog()
+
+    //     }
+    // }, [registerUser, openDialog, history])
 
     return (
         <div className={classes.root}>

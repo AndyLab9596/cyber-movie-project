@@ -9,13 +9,13 @@ import Login from '../../../pages/Auth/Login';
 import Register from '../../../pages/Auth/Register';
 import createAction from '../../../store/actions';
 import { actionTypes } from '../../../store/actions/Types';
-import { TOKEN } from '../../../ultis/settings/config';
+import { TOKEN, USER } from '../../../ultis/settings/config';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
 
     },
-    menuButton: {
+    icon: {
         marginRight: theme.spacing(2),
 
     },
@@ -66,21 +66,21 @@ const Header = () => {
         window.location.reload()
     };
 
+    // const registerUser = useSelector(state => state.UserReducer.registerUser);
+
+    // useEffect(() => {
+    //     if (registerUser) {
+    //         setMode(MODE.LOGIN)
+    //     }
+    // }, [registerUser])
+
     return (
         <div className={classes.root}>
             <AppBar position="sticky" elevation={5} className={classes.appbar}>
                 <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="#000"
-                        aria-label="open drawer"
-                    >
-                        <MovieIcon color="info" />
-                    </IconButton>
-
+                    <MovieIcon color="#fff" className={classes.icon} />
                     <Typography className={classes.title} variant="h6" noWrap>
-                        Movies
+                        Movie List
                     </Typography>
 
                     {!localStorage.getItem(TOKEN) && (
@@ -128,7 +128,7 @@ const Header = () => {
                 <DialogContent>
                     {mode === MODE.REGISTER && (
                         <>
-                            <Register closeDialog={handleClose} />
+                            <Register closeDialog={handleClose} openDialog={handleOpen} setMode={() => setMode(MODE.LOGIN)} />
                             <Box textAlign="center">
                                 <Button color="primary" onClick={() => setMode(MODE.LOGIN)}>
                                     Already have an account. Login here
@@ -137,7 +137,8 @@ const Header = () => {
 
                         </>
                     )}
-                    {mode === MODE.LOGIN && (
+
+                    {(mode === MODE.LOGIN) && (
                         <>
                             <Login closeDialog={handleClose} />
                             <Box textAlign="center">

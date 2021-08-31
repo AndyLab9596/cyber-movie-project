@@ -5,21 +5,22 @@ import createAction from './index';
 import { actionTypes } from "./Types";
 
 
-export const RegisterUser = (values) => {
+export const RegisterUser = (values, success, error, closeDialog) => {
     return async (dispatch) => {
         try {
             const res = await manageUserService.registerUser(values);
             dispatch(createAction(actionTypes.REGISTER_USER, res.data.content));
-            console.log(res)
+            localStorage.setItem(USER, JSON.stringify(res.data.content));
+            success('Register successfully');
+            closeDialog();
         }
         catch (err) {
-            alert(err.response.data.content)
-
+            error(err.response.data.content)
         }
     }
 }
 
-export const LoginUser = (values) => {
+export const LoginUser = (values, success, error) => {
 
     return async (dispatch) => {
         try {
@@ -29,10 +30,12 @@ export const LoginUser = (values) => {
             localStorage.setItem(TOKEN, res.data.content.accessToken);
             localStorage.setItem(USER, JSON.stringify(res.data.content));
             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
+            success('Login successfully')
             console.log(res)
         }
         catch (err) {
-            alert(err.response.data.content)
+            error(err.response.data.content);
+
         }
     }
 }
