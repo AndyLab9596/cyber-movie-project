@@ -13,7 +13,7 @@ export const HomeMovieAction = () => {
     }
 }
 
-export const HomeMovieWithPaginationAction = (page) => {
+export const HomeMovieWithPaginationAction = (page, setLoading) => {
     return async (dispatch) => {
         try {
             const res = await manageMovieService.getMoviesWithPagination(page)
@@ -22,10 +22,11 @@ export const HomeMovieWithPaginationAction = (page) => {
         catch (err) {
             console.log(err)
         }
+        setLoading(false)
     }
 }
 
-export const HomeSingleMovie = (maNhom) => {
+export const HomeSingleMovie = (maNhom, setLoading) => {
     return async (dispatch) => {
         try {
             const res = await manageMovieService.getSingleMovie(maNhom)
@@ -34,6 +35,7 @@ export const HomeSingleMovie = (maNhom) => {
         catch (err) {
             console.log(err)
         }
+        setLoading(false)
     }
 }
 

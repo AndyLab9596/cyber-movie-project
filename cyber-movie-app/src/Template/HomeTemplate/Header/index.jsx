@@ -66,13 +66,7 @@ const Header = () => {
         window.location.reload()
     };
 
-    // const registerUser = useSelector(state => state.UserReducer.registerUser);
 
-    // useEffect(() => {
-    //     if (registerUser) {
-    //         setMode(MODE.LOGIN)
-    //     }
-    // }, [registerUser])
 
     return (
         <div className={classes.root}>

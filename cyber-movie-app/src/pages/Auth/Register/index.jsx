@@ -69,13 +69,7 @@ const Register = ({ closeDialog }) => {
             () => closeDialog(),
         ))
     }
-    // useEffect(() => {
-    //     if (registerUser) {
-    //         history.push('/home');
-    //         openDialog()
 
-    //     }
-    // }, [registerUser, openDialog, history])
 
     return (
         <div className={classes.root}>

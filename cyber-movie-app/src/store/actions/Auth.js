@@ -40,33 +40,33 @@ export const LoginUser = (values, success, error) => {
     }
 }
 
-// export const FetchUser = () => {
-//     return async (dispatch) => {
-//         try {
-//             const res = await manageUserService.getUserInfo();
-//             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
-//         }
-//         catch (err) {
-//             console.log(err.response)
-//         }
-//     }
-// }
-
 export const FetchUser = () => {
     return async (dispatch) => {
         try {
-            const res = await axios({
-                url: "http://movieapi.cyberlearn.vn/api/QuanLyNguoiDung/ThongTinTaiKhoan",
-                method: "POST",
-                headers: {
-                    Authorization: "Bearer " + localStorage.getItem(TOKEN),
-                }
-            })
+            const res = await manageUserService.getUserInfo();
             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
-
-        } catch (err) {
-            console.log(err.response.data.content)
+        }
+        catch (err) {
+            console.log(err.response)
         }
     }
 }
+
+// export const FetchUser = () => {
+//     return async (dispatch) => {
+//         try {
+//             const res = await axios({
+//                 url: "http://movieapi.cyberlearn.vn/api/QuanLyNguoiDung/ThongTinTaiKhoan",
+//                 method: "POST",
+//                 headers: {
+//                     Authorization: "Bearer " + localStorage.getItem(TOKEN),
+//                 }
+//             })
+//             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
+
+//         } catch (err) {
+//             console.log(err.response.data.content)
+//         }
+//     }
+// }
 
