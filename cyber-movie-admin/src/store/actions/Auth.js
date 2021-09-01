@@ -20,7 +20,7 @@ export const RegisterUser = (values, success, error, closeDialog) => {
     }
 }
 
-export const LoginUser = (values, success, error) => {
+export const LoginUser = (values, success, error, history) => {
 
     return async (dispatch) => {
         try {
@@ -37,6 +37,8 @@ export const LoginUser = (values, success, error) => {
             error(err.response.data.content);
 
         }
+        history()
+
     }
 }
 
@@ -45,6 +47,19 @@ export const FetchUser = () => {
         try {
             const res = await manageUserService.getUserInfo();
             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
+        }
+        catch (err) {
+            console.log(err.response)
+        }
+    }
+}
+
+export const FetchAllUser = () => {
+    return async (dispatch) => {
+        try {
+            const res = await manageUserService.getAllUsersInfo();
+            dispatch(createAction(actionTypes.FETCH_ALL_USER, res.data.content));
+            // console.log(res.data.content);
         }
         catch (err) {
             console.log(err.response)
