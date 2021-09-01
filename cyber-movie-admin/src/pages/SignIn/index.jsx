@@ -55,7 +55,7 @@ export default function SignIn() {
             (msg) => {
                 enqueueSnackbar(msg, { variant: 'error' })
             },
-            () => history.push('/admin')
+            () => history.push('/admin/user')
         )
         )
     }

@@ -23,6 +23,10 @@ export class ManageUserService extends baseService {
         return this.get(`/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${GROUPID}`)
     }
 
+    addingUser = (values) => {
+        return this.post(`/api/QuanLyNguoiDung/ThemNguoiDung`, values)
+    }
+
 }
 
 export const manageUserService = new ManageUserService();

@@ -1,3 +1,4 @@
+import { RestoreFromTrashSharp } from "@material-ui/icons";
 import axios from "axios";
 import { manageUserService } from "../../api/ManageUserService";
 import { TOKEN, USER } from "../../ultis/settings/config";
@@ -63,6 +64,22 @@ export const FetchAllUser = () => {
         }
         catch (err) {
             console.log(err.response)
+        }
+    }
+}
+
+export const AddingUser = (values, success, error, reset) => {
+    return async (dispatch) => {
+        try {
+            const res = await manageUserService.addingUser(values);
+            console.log(res)
+            success('Adding user successfully')
+            reset()
+            dispatch(FetchAllUser())
+        }
+        catch (err) {
+            console.log(err.response)
+            error(err.response.data.content)
         }
     }
 }

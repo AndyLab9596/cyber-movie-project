@@ -20,13 +20,15 @@ import PeopleIcon from '@material-ui/icons/People';
 import clsx from 'clsx';
 import React, { Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, useHistory } from 'react-router-dom';
+import { Link, NavLink, Redirect, Route, useHistory } from 'react-router-dom';
 import BasicTable from '../../component/Table';
 import createAction from '../../store/actions';
 import { actionTypes } from '../../store/actions/Types';
 import { TOKEN } from '../../ultis/settings/config';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import UserControl from '../../pages/UserControl';
+import { AccountBoxOutlined, AddCircleRounded, ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
+import Collapse from '@material-ui/core/Collapse';
 
 
 const drawerWidth = 240;
@@ -88,16 +90,27 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
-    }
+    },
+    navLinkActive: {
+        backgroundColor: theme.palette.success.light
+    },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
 }));
 
 export default function AdminTemplate(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = useState(false);
+    const [openList, setOpenList] = useState(true)
     const [anchorEl, setAnchorEl] = useState(null);
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const handleListClick = () => {
+        setOpenList(state => !state)
+    }
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -116,10 +129,13 @@ export default function AdminTemplate(props) {
         window.location.reload()
     };
     const currentUser = useSelector(state => state.UserReducer.registerUser);
-    const { Component, ...restRoute } = props;
+    const { Component, redirectPath, ...restRoute } = props;
 
     return (
         <Route {...restRoute} render={(propsRoute) => {
+            if (!localStorage.getItem(TOKEN)) {
+                return <Redirect to={redirectPath} />
+            }
             return <div className={classes.root}>
                 <CssBaseline />
                 <AppBar
@@ -175,19 +191,42 @@ export default function AdminTemplate(props) {
                     </div>
                     <Divider />
                     <List>
-                        <ListItem button>
+                        <ListItem button onClick={handleListClick}>
                             <ListItemIcon>
                                 <PeopleIcon />
                             </ListItemIcon>
-                            <ListItemText primary="User List" />
+                            <ListItemText primary="User Control" />
+                            {openList ? <ExpandLess /> : <ExpandMore />}
                         </ListItem>
+                        <Collapse in={openList} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                <NavLink to="/admin/user" >
+                                    <ListItem button className={classes.nested}>
+                                        <ListItemIcon>
+                                            <AccountBoxOutlined />
+                                        </ListItemIcon>
+                                        <ListItemText primary="User List" />
+                                    </ListItem>
+                                </NavLink>
+                            </List>
+                            <List component="div" disablePadding>
+                                <NavLink to="/admin/user/add" >
+                                    <ListItem button className={classes.nested}>
+                                        <ListItemIcon>
+                                            <AddCircleRounded />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Adding User" />
+                                    </ListItem>
+                                </NavLink>
+                            </List>
+                        </Collapse>
 
-                        <ListItem button>
+                        {/* <ListItem button>
                             <ListItemIcon>
                                 <MovieIcon />
                             </ListItemIcon>
-                            <ListItemText primary="Movie List" />
-                        </ListItem>
+                            <ListItemText primary="Movie Control" />
+                        </ListItem> */}
 
                     </List>
                     <Divider />
@@ -199,8 +238,7 @@ export default function AdminTemplate(props) {
                     })}
                 >
                     <div className={classes.drawerHeader} />
-                    <UserControl />
-                    {/* <BasicTable /> */}
+                    <Component {...propsRoute} />
                 </main>
             </div>
         }} />

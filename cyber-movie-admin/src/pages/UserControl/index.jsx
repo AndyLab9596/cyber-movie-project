@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FetchAllUser } from '../../store/actions/Auth';
 import _ from 'lodash';
 import { NavLink } from 'react-router-dom';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Typography } from '@material-ui/core';
 
 
 const useStyles = makeStyles({
@@ -54,6 +54,9 @@ export default function UserControl() {
 
     return (
         <Paper className={classes.root}>
+            <Typography variant="h4" color="primary" gutterBottom align="center">
+                USER LIST
+            </Typography>
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -100,7 +103,6 @@ export default function UserControl() {
                                         <IconButton color="secondary" size="small">
                                             <DeleteIcon />
                                         </IconButton>
-
                                     </TableCell>
                                 </TableRow>
                             );
