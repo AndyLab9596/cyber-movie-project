@@ -12,6 +12,8 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { LoginUser } from '../../store/actions/Auth';
+import * as yup from 'yup';
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -33,21 +35,33 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const schema = yup.object().shape({
+    taiKhoan: yup.string().required('username is required'),
+    matKhau: yup.string().required('password is required'),
+
+});
+
 export default function SignIn() {
     const classes = useStyles();
     const history = useHistory();
     const { enqueueSnackbar } = useSnackbar();
-    const { values, handleChange, handleBlur } = useFormik({
+    const { values, handleChange, handleBlur, setTouched, isValid, touched, errors } = useFormik({
         initialValues: {
             taiKhoan: "",
             matKhau: "",
         },
-        // validateOnMount: true,
-        // validationSchema:
+        validateOnMount: true,
+        validationSchema: schema,
     })
     const dispatch = useDispatch();
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setTouched({
+            taiKhoan: true,
+            matKhau: true,
+
+        })
+        if (!isValid) return
         dispatch(LoginUser(values,
             (msg) => {
                 enqueueSnackbar(msg, { variant: 'success' })
@@ -73,9 +87,13 @@ export default function SignIn() {
                 <form className={classes.form} onSubmit={handleSubmit} noValidate>
                     <TextField
                         name="taiKhoan" value={values.taiKhoan} onChange={handleChange} onBlur={handleBlur} fullWidth label="username" variant="outlined" margin="normal"
+                        error={touched.taiKhoan && !!errors.taiKhoan}
+                        helperText={touched.taiKhoan && errors.taiKhoan}
                     />
                     <TextField
                         name="matKhau" value={values.matKhau} onChange={handleChange} onBlur={handleBlur} fullWidth label="password" variant="outlined" margin="normal" type="password"
+                        error={touched.matKhau && !!errors.matKhau}
+                        helperText={touched.taiKhoan && errors.matKhau}
                     />
                     <Button
                         type="submit"

@@ -1,12 +1,12 @@
 import { Avatar, Button, makeStyles, TextField, Typography } from '@material-ui/core';
-import { LockOutlined } from '@material-ui/icons';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useFormik } from 'formik';
+import { useSnackbar } from 'notistack';
 import React, { memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { LoginUser } from '../../../store/actions/Auth';
-import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router-dom';
+import * as yup from 'yup';
+import { LoginUser } from '../../../store/actions/Auth';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -35,21 +35,33 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
+const schema = yup.object().shape({
+    taiKhoan: yup.string().required('username is required'),
+    matKhau: yup.string().required('password is required'),
+
+});
+
 const Login = ({ closeDialog }) => {
     const history = useHistory();
     const classes = useStyles();
     const { enqueueSnackbar } = useSnackbar();
-    const { values, handleChange, handleBlur } = useFormik({
+    const { values, handleChange, handleBlur, setTouched, isValid, touched, errors } = useFormik({
         initialValues: {
             taiKhoan: "",
             matKhau: "",
         },
-        // validateOnMount: true,
-        // validationSchema:
+        validateOnMount: true,
+        validationSchema: schema,
     })
     const dispatch = useDispatch();
     const handleSubmit = (e) => {
         e.preventDefault();
+        setTouched({
+            taiKhoan: true,
+            matKhau: true,
+
+        })
+        if (!isValid) return
         dispatch(LoginUser(values,
             (msg) => {
                 enqueueSnackbar(msg, { variant: 'success' })
@@ -81,9 +93,15 @@ const Login = ({ closeDialog }) => {
             </Typography>
 
             <form onSubmit={handleSubmit} noValidate>
-                <TextField name="taiKhoan" value={values.taiKhoan} onChange={handleChange} onBlur={handleBlur} fullWidth label="username" variant="outlined" margin="normal" />
-                <TextField name="matKhau" value={values.matKhau} onChange={handleChange} onBlur={handleBlur} fullWidth label="password" variant="outlined" margin="normal" type="password" />
+                <TextField name="taiKhoan" value={values.taiKhoan} onChange={handleChange} onBlur={handleBlur} fullWidth label="username" variant="outlined" margin="normal"
+                    error={touched.taiKhoan && !!errors.taiKhoan}
+                    helperText={touched.taiKhoan && errors.taiKhoan}
 
+                />
+                <TextField name="matKhau" value={values.matKhau} onChange={handleChange} onBlur={handleBlur} fullWidth label="password" variant="outlined" margin="normal" type="password"
+                    error={touched.matKhau && !!errors.matKhau}
+                    helperText={touched.taiKhoan && errors.matKhau}
+                />
                 <Button
                     type="submit"
                     variant="contained"
