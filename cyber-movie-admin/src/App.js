@@ -6,13 +6,14 @@ import SignIn from './pages/SignIn';
 import UserAdding from './pages/UserAdding';
 import UserControl from './pages/UserControl';
 import UserEditing from './pages/UserEditing';
-import { FetchUser } from './store/actions/Auth';
+import { FetchAllUser, FetchUser } from './store/actions/Auth';
 import AdminTemplate from './Template/AdminTemplate';
 
 function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(FetchUser())
+    dispatch(FetchAllUser());
   }, [dispatch])
   return (
     <div className="App">

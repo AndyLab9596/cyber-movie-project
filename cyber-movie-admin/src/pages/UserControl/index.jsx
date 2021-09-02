@@ -47,20 +47,40 @@ export default function UserControl() {
 
 
     const users = useSelector(state => state.UserReducer.users);
+
+    // console.log(users);
     const tableHeader = _.keys(users[0]);
     tableHeader.push('Thao tác')
 
-    useEffect(() => {
-        dispatch(FetchAllUser());
+    const [rows, setRows] = useState(users);
 
+    const [searched, setSearched] = useState("");
+    console.log(rows)
 
-    }, [dispatch])
+    const requestSearch = (searchedVal = "") => {
+        const filteredRows = users.filter((row) => {
+            return row.taiKhoan.toLowerCase().includes(searchedVal.toLowerCase());
+        });
+        setRows(filteredRows);
+    };
+
+    const cancelSearch = () => {
+        setSearched("");
+        requestSearch(searched);
+    };
 
     return (
         <Paper className={classes.root}>
             <Typography variant="h4" color="primary" gutterBottom align="center">
                 USER LIST
             </Typography>
+            <SearchBar
+                value={searched}
+                onChange={(searchVal) => requestSearch(searchVal)}
+                onCancelSearch={() => cancelSearch()}
+                className={classes.searchBar}
+                placeholder="search by taiKhoan"
+            />
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -77,7 +97,7 @@ export default function UserControl() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => {
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user, index) => {
                             return (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                                     <TableCell align="right">
