@@ -91,8 +91,12 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
-    navLinkActive: {
-        backgroundColor: theme.palette.success.light
+    navLink: {
+        textDecoration: "none",
+        listStyleType: 'none'
+    },
+    activeNavLinK: {
+        backgroundColor: theme.palette.grey[300]
     },
     nested: {
         paddingLeft: theme.spacing(4),
@@ -119,9 +123,6 @@ export default function AdminTemplate(props) {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-    // const handleUerClick = (e) => {
-    //     setAnchorEl(e.currentTarget)
-    // };
 
     const handleLogoutClick = () => {
         dispatch(createAction(actionTypes.LOGOUT_USER))
@@ -200,7 +201,7 @@ export default function AdminTemplate(props) {
                         </ListItem>
                         <Collapse in={openList} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
-                                <NavLink to="/admin/user" >
+                                <NavLink to="/admin/user" className={classes.navLink}>
                                     <ListItem button className={classes.nested}>
                                         <ListItemIcon>
                                             <AccountBoxOutlined />
@@ -209,8 +210,8 @@ export default function AdminTemplate(props) {
                                     </ListItem>
                                 </NavLink>
                             </List>
-                            <List component="div" disablePadding>
-                                <NavLink to="/admin/user/add" >
+                            <List component="div" disablePadding >
+                                <NavLink to="/admin/user/add" className={classes.navLink}>
                                     <ListItem button className={classes.nested}>
                                         <ListItemIcon>
                                             <AddCircleRounded />
@@ -220,14 +221,6 @@ export default function AdminTemplate(props) {
                                 </NavLink>
                             </List>
                         </Collapse>
-
-                        {/* <ListItem button>
-                            <ListItemIcon>
-                                <MovieIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Movie Control" />
-                        </ListItem> */}
-
                     </List>
                     <Divider />
 

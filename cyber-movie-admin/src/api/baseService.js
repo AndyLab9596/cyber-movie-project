@@ -24,7 +24,7 @@ class baseService {
         return axios({
             url: `${DOMAIN}${url}`,
             method: "GET",
-            headers: { 'Authentication': 'Bearer ' + localStorage.getItem(TOKEN) }
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(TOKEN) }
         })
     };
 
@@ -32,7 +32,7 @@ class baseService {
         return axios({
             url: `${DOMAIN}${url}`,
             method: "DELETE",
-            headers: { 'Authentication': 'Bearer ' + localStorage.getItem(TOKEN) }
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem(TOKEN) }
         })
     }
 }

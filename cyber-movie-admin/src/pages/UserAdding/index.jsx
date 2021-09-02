@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Button, Grid, Paper, TextField, Typography } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
@@ -12,9 +12,22 @@ const useStyles = makeStyles({
     }
 })
 
+const people = [
+    {
+        value: 'KhachHang',
+        label: 'customer'
+    },
+    {
+        value: 'QuanTri',
+        label: 'admin'
+    }
+]
+
 const UserAdding = () => {
     const classes = useStyles();
-    const { values, handleChange, handleBlur, resetForm } = useFormik({
+    const [typeOfPeople, setTypeOfPeople] = useState('khachHang')
+
+    const { values, handleChange, handleBlur, resetForm, setFieldValue } = useFormik({
         initialValues: {
             taiKhoan: "",
             matKhau: "",
@@ -28,6 +41,10 @@ const UserAdding = () => {
         // validationSchema:
     })
     const dispatch = useDispatch();
+    const handleSelect = (e) => {
+        setTypeOfPeople(e.target.value);
+        setFieldValue('maLoaiNguoiDung', e.target.value)
+    }
     // const registerUser = useSelector(state => state.UserReducer.registerUser);
     // const history = useHistory();
     const { enqueueSnackbar } = useSnackbar();
@@ -42,8 +59,6 @@ const UserAdding = () => {
             },
             () => resetForm({})
         ))
-
-        console.log(values)
     }
     return (
         <Paper className={classes.root}>
@@ -52,7 +67,7 @@ const UserAdding = () => {
             </Typography>
             <Box p={2}>
                 <form onSubmit={handleSubmit} noValidate>
-                    <Grid container spacing={2} >
+                    <Grid container spacing={2} style={{ marginBottom: "1rem" }}>
                         <Grid item xs={12} sm={6}>
                             <TextField name="taiKhoan" value={values.taiKhoan} onChange={handleChange} onBlur={handleBlur} fullWidth label="username" variant="outlined" margin="normal" />
                         </Grid>
@@ -73,7 +88,17 @@ const UserAdding = () => {
                             <TextField name="hoTen" value={values.hoTen} onChange={handleChange} onBlur={handleBlur} fullWidth label="fullname" variant="outlined" margin="normal" />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField name="maLoaiNguoiDung" value={values.maLoaiNguoiDung} onChange={handleChange} onBlur={handleBlur} fullWidth label="type of user" variant="outlined" margin="normal" />
+                            <TextField select name="maLoaiNguoiDung" value={typeOfPeople} onChange={handleSelect}
+                                SelectProps={{
+                                    native: true,
+                                }}
+                                fullWidth label="type of user" variant="outlined" margin="normal" >
+                                {people.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </TextField>
                         </Grid>
                     </Grid>
                     <Button

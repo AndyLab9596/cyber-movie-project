@@ -1,5 +1,3 @@
-import { RestoreFromTrashSharp } from "@material-ui/icons";
-import axios from "axios";
 import { manageUserService } from "../../api/ManageUserService";
 import { TOKEN, USER } from "../../ultis/settings/config";
 import createAction from './index';
@@ -32,7 +30,6 @@ export const LoginUser = (values, success, error, history) => {
             localStorage.setItem(USER, JSON.stringify(res.data.content));
             dispatch(createAction(actionTypes.LOGIN_USER, res.data.content));
             success('Login successfully')
-            console.log(res)
         }
         catch (err) {
             error(err.response.data.content);
@@ -72,7 +69,6 @@ export const AddingUser = (values, success, error, reset) => {
     return async (dispatch) => {
         try {
             const res = await manageUserService.addingUser(values);
-            console.log(res)
             success('Adding user successfully')
             reset()
             dispatch(FetchAllUser())
@@ -83,3 +79,35 @@ export const AddingUser = (values, success, error, reset) => {
         }
     }
 }
+
+export const EditingUser = (values, success, error, history) => {
+    return async (dispatch) => {
+        try {
+            const res = await manageUserService.editingUser(values);
+            success('Editing user successfully')
+            history()
+            dispatch(FetchAllUser())
+        }
+        catch (err) {
+            console.log(err.response)
+            error(err.response.data.content)
+        }
+    }
+}
+
+export const DeletingUser = (values, success, error) => {
+    return async (dispatch) => {
+        try {
+            const res = await manageUserService.deletingUser(values);
+            dispatch(FetchAllUser())
+            success('Deleting user successfully')
+            console.log(res)
+        }
+        catch (err) {
+            console.log(err.response)
+            error(err.response.data.content)
+        }
+    }
+}
+
+

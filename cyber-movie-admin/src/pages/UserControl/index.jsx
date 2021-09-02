@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, IconButton, Typography } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,14 +8,16 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { useDispatch, useSelector } from 'react-redux';
-import { FetchAllUser } from '../../store/actions/Auth';
+import EditIcon from '@material-ui/icons/Edit';
 import _ from 'lodash';
+import { useSnackbar } from 'notistack';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { IconButton, Typography } from '@material-ui/core';
-
+import { DeletingUser, FetchAllUser } from '../../store/actions/Auth';
+import SearchBar from "material-ui-search-bar";
 
 const useStyles = makeStyles({
     root: {
@@ -24,32 +26,34 @@ const useStyles = makeStyles({
     container: {
         maxHeight: 440,
     },
+    searchBar: {
+        margin: '.5rem'
+    }
 });
 
 export default function UserControl() {
     const classes = useStyles();
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const { enqueueSnackbar } = useSnackbar();
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-
     const dispatch = useDispatch()
-    const users = useSelector(state => state.UserReducer.users)
-    // console.log(users);
+
+
+    const users = useSelector(state => state.UserReducer.users);
     const tableHeader = _.keys(users[0]);
     tableHeader.push('Thao tác')
-    console.log(tableHeader)
-
 
     useEffect(() => {
-        dispatch(FetchAllUser())
+        dispatch(FetchAllUser());
+
+
     }, [dispatch])
 
     return (
@@ -95,12 +99,22 @@ export default function UserControl() {
                                         {user.maLoaiNguoiDung}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <NavLink to="/">
+                                        <NavLink to={`/admin/user/edit/${user.taiKhoan}`}>
                                             <IconButton color="primary" size="small">
                                                 <EditIcon />
                                             </IconButton>
                                         </NavLink>
-                                        <IconButton color="secondary" size="small">
+                                        <IconButton color="secondary" size="small" onClick={() => {
+                                            dispatch(DeletingUser(
+                                                user.taiKhoan,
+                                                (msg) => {
+                                                    enqueueSnackbar(msg, { variant: 'success' })
+                                                },
+                                                (msg) => {
+                                                    enqueueSnackbar(msg, { variant: 'error' })
+                                                }
+                                            ))
+                                        }} >
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
@@ -111,7 +125,7 @@ export default function UserControl() {
                 </Table>
             </TableContainer>
             <TablePagination
-                rowsPerPageOptions={[10, 25, 100]}
+                rowsPerPageOptions={[5, 10, 25, 100]}
                 component="div"
                 count={users.length}
                 rowsPerPage={rowsPerPage}
