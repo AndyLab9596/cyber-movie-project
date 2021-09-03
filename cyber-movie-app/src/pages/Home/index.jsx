@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         justifyContent: "center",
         flexFlow: 'row nowrap',
+
     },
     title: {
         minHeight: "105px",
@@ -65,7 +66,6 @@ const Home = () => {
     const totalPages = useSelector(state => state.HomeMovieReducer.arrMoviesWithPagination.totalPages);
     const [pagination, setPagination] = useState(1);
     const [loading, setLoading] = useState(true)
-
 
     const handleChange = (e, page) => {
         setPagination(page)

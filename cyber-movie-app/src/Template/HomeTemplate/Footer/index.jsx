@@ -23,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         minHeight: 'auto',
+        [theme.breakpoints.up('sm')]: {
+            position: 'sticky',
+            bottom: 0,
+            left: 0,
+            right: 0,
+        },
     },
     main: {
         marginTop: theme.spacing(8),
